@@ -1,6 +1,5 @@
 # NDG-linux-note
-Note lại khóa học NDG linux
-		TỔ CHỨC THƯ MỤC VÀ TẬP TIN TRONG LINUX	
+				TỔ CHỨC THƯ MỤC VÀ TẬP TIN TRONG LINUX	
 
 Root là gì? 
 	Root là thư mục cao nhất trong linux, ký tự / thể hiện root
@@ -97,7 +96,7 @@ Cấu trúc của tập tin:
 				|	thêm hoặc xóa file khỏi thư |
 				|	mục							|	
 				|								|
-	------------+-------------------------------+------------------------------------------------------				|								|
+	------------+-------------------------------+------------------------------------------------------
 	execute (x)	|	Allows for a file to be run |	Allows a user to change to the directory if parent 
 				|	as a process, although 		|	directories have execute permission as well.
 				|	script files require read 	|
@@ -146,3 +145,4 @@ Lệnh cd: Changing Directories, thay đổi vị trí thư mục
 	cd ..: Di chuyển về thư mục cha
 
 	cd ~/Documents: di chuyển tới thư mục Documents
+
