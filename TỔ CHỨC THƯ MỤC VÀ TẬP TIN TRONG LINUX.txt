@@ -1,0 +1,146 @@
+		TỔ CHỨC THƯ MỤC VÀ TẬP TIN TRONG LINUX	
+
+Root là gì? 
+	Root là thư mục cao nhất trong linux, ký tự / thể hiện root
+	Ký tự ~ thể hiện biến môi trường The home directory of the current user.
+		echo $HOME: in ra biến HOME
+		/home/sysadmin
+
+Đường dẫn tuyệt đối:
+	Bắt đầu từ thư mục root, vì vậy luôn bắt đầu từ ký tự /. vd /home/sysadmin là đường dẫn tuyệt đối
+		cd /home/sysadmin: di chuyển từ thư mục root -> home -> sysadmin. 
+		Sau khi changed gõ pwd để biết đang đứng ở đâu
+
+Đường dẫn tương đối:
+	Không bắt đầu với ký tự / , mà bắt đầu bằng tên thư mục. 
+	Đường dẫn tương đối bắt đầu từ thư mục hiện tại
+		cd School/Art: di chuyển từ thư mục hiện tại tới School -> Art
+
+Shortcuts:
+	The .. Characters: là biểu diễn cho thư mục hiện tại và thư mục cha
+		cd .. : quay về thư mục cha
+
+	The . Character: là biểu diễn cho thư mục hiện tại
+
+Cấu trúc của tập tin:
+	ls -l /var/log/
+		total 844  
+		Vị trí các cột là 
+		permissions | count | userOwner | groupOwner | size | timestamp | filename                                                                   
+		-rw-r--r-- 1 root   root  18047 Dec 20  2017 alternatives.log                   
+		drwxr-x--- 2 root   adm    4096 Dec 20  2017 apache2  
+
+	  Field đầu tiên chứa 10 ký tự, với ký tự đầu xác định kiểu của file và 9 ký tự
+	tiếp theo xác định là về permissions
+	  
+	  Các kiểu của file:
+		Symbol	File Type	   Description
+		d	    directory	   A file used to store other files.
+		-	    regular file   Includes readable files, images files, binary files, and compressed files.
+		l	    symbolic link	Trỏ tới file khác.
+		s	    socket	        Allows for communication between processes.
+		p	    pipe	        Allows for communication between processes.
+		b	    block file	    Used to communicate with hardware.
+		c	    character file	Used to communicate with hardware.
+
+	*** Lưu ý: Trong trường hợp của symbolic links, file trỏ tới file khác, 
+	tên link sẽ hiển thị cùng với ký tự mũi tên và đường dẫn tới thư mục gốc
+		lrwxrwxrwx. 1 root root 22 Nov 6 2012 /etc/grub.conf -> ../boot/grub/grub.conf
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+## Permissions
+		Nhìn nhận ở 9 ký tự tiếp theo trong field đầu khi gõ lệnh ls -l (xem bên trên)
+		rw-r--r--
+		Với mỗi 9 ký tự này sẽ được chia ra làm thành 3 phần: Owner, Group, Other
+
+		Owner: 3 ký tự đầu tiên là quyền của user owner đã tạo ra file. 
+		Nếu tài khoản hiện tại của bạn là chủ sở hữu người dùng của tệp, thì bộ ba 
+		quyền đầu tiên sẽ được áp dụng và các quyền khác không có hiệu lực. 
+		Để xác định người sở hữu file, nhìn vào field user owner
+
+		Group: 3 ký tự tiếp theo là quyền của group. 
+		Nếu user hiện tại ko phải là user owner của file nhưng bạn là thành viên của group 
+		sở hữu file, thì quyền của group sẽ được áp dụng và các quyền khác ko có hiệu lực.
+		Để xác định group sở hữu file, nhìn vào group owner
+
+		Other: 3 ký tự cuối là quyền cho tất cả mọi người, dành cho bất kỳ ai mà ko có được 2 quyền đầu. 
+		Nếu bạn ko phải là user owner hoặc thành viên của group, thì quyền other dành cho bạn.
+
+	# Permission Types:
+
+	Bao gồm read, write và execute. 
+
+	Permission	|	Effects on File				|	Effects on Directory
+	------------+-------------------------------+------------------------------------------------------
+	read (r)	|	Allows for file contents 	|	Without execute permission on the directory, allows 
+				|	to be read or copied.		|	for a non-detailed listing of files. With execute 
+				|								|	permission, ls -l can provide a detailed listing.
+				|								|
+				|	Cho phép nội dung tập tin 	|	Ko có quyền thực thi trên thư mục, cho phép liệt kê
+				|	có thể đọc hoặc copy		|	các file ko chi tiết. Với quyền ls -l, có thể 
+				|								|	cung cấp list chi tiết
+				|								|
+	------------+-------------------------------+------------------------------------------------------
+				|								|
+	write (w)	|	Allows for contents to be 	|	For this permission to work, the directory must also 
+				|	modified or overwritten. 	|	have execute permission.
+				|	Allows for files to be 		|	
+				|	addedor removed from 		|
+				|	a directory.				|									
+				|								|	
+				|	Cho phép nội dung được sửa	|	Để quyền này hoạt động, thư mục phải có quyền execute
+				|	đổi hoặc ghi đè. Cho phép	|
+				|	thêm hoặc xóa file khỏi thư |
+				|	mục							|	
+				|								|
+	------------+-------------------------------+------------------------------------------------------				|								|
+	execute (x)	|	Allows for a file to be run |	Allows a user to change to the directory if parent 
+				|	as a process, although 		|	directories have execute permission as well.
+				|	script files require read 	|
+				|	permission, as well.		|
+				|								|
+				|	Cho phép tập tin có thể run.|	Cho phép user thay đổi thư mục nếu thư mục cha cũng 
+				|	Mặc dùng script file cũng	|	có quyền thực thi
+				|	phải có quyền read 			|							
+	------------+-------------------------------+---------------------------------------------------	
+
+	ví dụ:  -r--rw-rwx. 1 sysadmin staff 999 Apr  10  2013 /home/sysadmin/test
+
+	tập tin này - User owner là sysadmin được cấp quyền read
+				- Group là staff với quyền được cấp là read và write
+				- Other quyền được cấp là read, write và execute
+
+	Trong kịch bản này thì sysadmin là có ít quyền truy cập nhất. Tuy nhiên điều đó ko quan trọng, nếu
+	sysadmin là thành viên của staff group; once user ownership has been established, only the user
+	owner's permissions apply.
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+## THAY ĐỔI QUYỀN
+	Lệnh chmod: Thay đổi quyền. Chỉ có root user hoặc user sở hữu file mới có thể thay đổi quyền
+	
+	Có 2 cách để thay đổi quyền chmod: dùng ký tự và hệ tám.
+
+
+
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+Các lệnh Di chuyển thư mục và in thư mục hiện hành
+
+Lệnh pwd: Printing Working Directory, in ra thư mục hệ thống 
+	pwd: in ra đường dẫn hiện đang đứng
+	/home/sysadmin
+	
+Lệnh cd: Changing Directories, thay đổi vị trí thư mục
+	cd ~: di chuyển tới $HOME
+
+	cd /: Di chuyển tới root
+
+	cd ..: Di chuyển về thư mục cha
+
+	cd ~/Documents: di chuyển tới thư mục Documents
